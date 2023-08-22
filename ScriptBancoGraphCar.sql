@@ -1,12 +1,12 @@
--- CREATE USER 'GraphUser'@'localhost' IDENTIFIED BY 'Graph2023';
--- GRANT ALL PRIVILEGES ON Graph.* TO 'GraphUser'@'localhost';
+CREATE USER 'GraphUser'@'localhost' IDENTIFIED BY 'Graph2023';
+ GRANT ALL PRIVILEGES ON Graph.* TO 'GraphUser'@'localhost';
 
 DROP DATABASE IF EXISTS GraphCar;
 CREATE DATABASE GraphCar;
 USE GraphCar;
 
 CREATE TABLE Usuario(
-	idUsuario INT PRIMARY KEY,
+	idUsuario INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(50),
     email VARCHAR(100),
     senha VARCHAR(64),
@@ -15,13 +15,13 @@ CREATE TABLE Usuario(
 );
 
 CREATE TABLE ModeloCarro(
-	idCarro INT PRIMARY KEY,
+	idCarro INT PRIMARY KEY AUTO_INCREMENT,
     Modelo VARCHAR(30),
     VersaoSoftware VARCHAR(60)
 );
 
 CREATE TABLE Carro(
-	idCarro INT PRIMARY KEY,
+	idCarro INT PRIMARY KEY AUTO_INCREMENT,
     Placa VARCHAR(15),
 	fkUsuario INT,
     fkModelo INT,
@@ -30,13 +30,13 @@ CREATE TABLE Carro(
 );
 
 CREATE TABLE Componentes(
-	idComponentes INT PRIMARY KEY,
+	idComponentes INT PRIMARY KEY AUTO_INCREMENT,
     NomeComponente VARCHAR(10),
     VersaoDriver VARCHAR(15)
 );
 
 CREATE TABLE Dados(
-	idDados INT PRIMARY KEY,
+	idDados INT PRIMARY KEY AUTO_INCREMENT,
     Temperatura DECIMAL(5,2),
     Voltagem DECIMAL(5,2),
     Memoria DECIMAL(7,2),
@@ -48,3 +48,5 @@ CREATE TABLE Dados(
     CONSTRAINT fhkCarro FOREIGN KEY (fkCarro) REFERENCES Carro(idCarro),
     CONSTRAINT fhkComponentes FOREIGN KEY (fkComponentes) REFERENCES Componentes(idComponentes)
 );
+
+INSERT INTO Usuario (nome, email, senha, cpf, adm) values ('ADM', 'admin@graphcar.com', '$2b$10$M/CbWCDYZcYYDnTUs1nfPOu/U665hzfQDSBucm56MxAy4ldau2YAi', '000', 3);
