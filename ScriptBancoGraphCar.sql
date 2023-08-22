@@ -1,5 +1,5 @@
-CREATE USER 'GraphUser'@'localhost' IDENTIFIED BY 'Graph2023';
- GRANT ALL PRIVILEGES ON Graph.* TO 'GraphUser'@'localhost';
+-- CREATE USER 'GraphUser'@'localhost' IDENTIFIED BY 'Graph2023';
+-- GRANT ALL PRIVILEGES ON Graph.* TO 'GraphUser'@'localhost';
 
 DROP DATABASE IF EXISTS GraphCar;
 CREATE DATABASE GraphCar;
