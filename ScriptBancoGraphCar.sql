@@ -9,42 +9,42 @@ CREATE DATABASE GraphCar;
 USE GraphCar;
 
 CREATE TABLE Usuario(
-	idUsuario INT PRIMARY KEY AUTO_INCREMENT,
+      idUsuario INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(50),
     email VARCHAR(100),
     senha VARCHAR(64),
-    cpf CHAR (11), 
+    cpf CHAR (11),
     adm TINYINT
 );
 
 CREATE TABLE ModeloCarro(
-	idCarro INT PRIMARY KEY AUTO_INCREMENT,
+      idCarro INT PRIMARY KEY AUTO_INCREMENT,
     modelo VARCHAR(30),
     versaoSoftware VARCHAR(60)
 );
 
 CREATE TABLE Carro(
-	idCarro INT PRIMARY KEY AUTO_INCREMENT,
+      idCarro INT PRIMARY KEY AUTO_INCREMENT,
     placa VARCHAR(15),
-	fkUsuario INT,
+      fkUsuario INT,
     fkModelo INT,
     CONSTRAINT fhkUsuario FOREIGN KEY (fkUsuario) REFERENCES Usuario(idUsuario),
     CONSTRAINT fhkModelo FOREIGN KEY (fkModelo) REFERENCES ModeloCarro(idCarro)
 );
 
 CREATE TABLE Componentes(
-	idComponentes INT PRIMARY KEY AUTO_INCREMENT,
+      idComponentes INT PRIMARY KEY AUTO_INCREMENT,
     nomeComponente VARCHAR(15),
     versaoDriver VARCHAR(15)
 );
 
 CREATE TABLE Medida (
-	idMedida INT PRIMARY KEY AUTO_INCREMENT,
+      idMedida INT PRIMARY KEY AUTO_INCREMENT,
     unidadeMedida VARCHAR(10)
 );
 
 CREATE TABLE Dados(
-	idDados INT PRIMARY KEY AUTO_INCREMENT,
+      idDados INT PRIMARY KEY AUTO_INCREMENT,
     -- temperatura DECIMAL(5,2),
     -- voltagem DECIMAL(5,2),
     -- memoria DECIMAL(7,2),
