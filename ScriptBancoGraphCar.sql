@@ -2,7 +2,7 @@
 DELETE FROM mysql.user where user = 'GraphUser';
 
 CREATE USER 'GraphUser'@'%' IDENTIFIED BY 'Graph2023';
-GRANT ALL PRIVILEGES ON Graph.* TO 'GraphUser'@'%';
+GRANT ALL PRIVILEGES ON GraphCar.* TO 'GraphUser'@'%';
 FLUSH PRIVILEGES;
 
 DROP DATABASE IF EXISTS GraphCar;
