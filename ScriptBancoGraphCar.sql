@@ -44,12 +44,12 @@ CREATE TABLE Medida (
 );
 
 CREATE TABLE Dados(
-      idDados INT PRIMARY KEY AUTO_INCREMENT,
-    -- temperatura DECIMAL(5,2),
-    -- voltagem DECIMAL(5,2),
-    -- memoria DECIMAL(7,2),
-    -- utilizacao INT,
-    -- DVSEnabled TINYINT,
+     idDados INT PRIMARY KEY AUTO_INCREMENT,
+    temperatura DECIMAL(5,2),
+    voltagem DECIMAL(5,2),
+    memoria DECIMAL(7,2),
+    utilizacao INT,
+    DVSEnabled TINYINT,
     dado FLOAT,
     dateDado DATETIME,
     fkCarro INT,
