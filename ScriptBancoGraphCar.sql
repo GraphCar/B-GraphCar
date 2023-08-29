@@ -43,10 +43,9 @@ CREATE TABLE Componentes(
 
 CREATE TABLE Dados(
 	idDados INT PRIMARY KEY AUTO_INCREMENT,
-    Temperatura DECIMAL(5,2),
-    Memoria DECIMAL(7,2),
-    Utilizacao INT,
-    DateDado DATETIME,
+    dado FLOAT,
+    medida VARCHAR(10),
+    dateDado DATETIME,
     fkCarro INT,
     fkComponentes INT,
     CONSTRAINT fhkCarro FOREIGN KEY (fkCarro) REFERENCES Carro(idCarro),
@@ -96,3 +95,6 @@ INSERT INTO Componentes (idComponentes, nomeComponente) VALUES (NULL, "Disco");
 -- Exemplo de call da procedure
 -- CALL cadastrar_motorista 
 -- ('lucas', 'lucas@gmail.com', 'lucas123', '55555555555', 'bbb9999', 'model X', 1);
+
+select * from Dados;
+select * from Componentes;
