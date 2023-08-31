@@ -17,11 +17,13 @@ CREATE TABLE Usuario(
     foto VARCHAR(100), 
     adm TINYINT
 );
+
 CREATE TABLE ModeloCarro(
 	idModelo INT PRIMARY KEY AUTO_INCREMENT,
     Modelo VARCHAR(30),
     VersaoSoftware VARCHAR(60)
 );
+
 CREATE TABLE Carro(
 	idCarro INT PRIMARY KEY AUTO_INCREMENT,
     Placa VARCHAR(15) UNIQUE,
@@ -30,6 +32,7 @@ CREATE TABLE Carro(
     CONSTRAINT fhkUsuario FOREIGN KEY (fkUsuario) REFERENCES Usuario(idUsuario),
     CONSTRAINT fhkModelo FOREIGN KEY (fkModelo) REFERENCES ModeloCarro(idModelo)
 );
+
 CREATE TABLE Componentes(
 	idComponentes INT PRIMARY KEY AUTO_INCREMENT,
     NomeComponente VARCHAR(10),
@@ -37,6 +40,7 @@ CREATE TABLE Componentes(
     fkModelo INT,
     FOREIGN KEY (fkModelo) REFERENCES ModeloCarro(idModelo)
 );
+
 CREATE TABLE Dados(
 	idDados INT PRIMARY KEY AUTO_INCREMENT,
     dado FLOAT,
