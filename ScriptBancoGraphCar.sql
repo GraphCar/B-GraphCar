@@ -58,21 +58,6 @@ CREATE TABLE Dados(
 	MAX(CASE WHEN fkComponentes = 3 THEN dado END) AS "Disco"
 FROM Dados GROUP BY idDados; */
 
-
-SET @lista_componentes = (SELECT GROUP_CONCAT( (
-	CONCAT(
-		"MAX(CASE WHEN fkComponentes = ", Componentes.idComponentes, " THEN ROUND(dado, 2) END) AS '", Componentes.nomeComponente, "'"
-	)
-) SEPARATOR ", ") FROM Componentes
-);
-
-SET @comando_sql = CONCAT('CREATE VIEW dados_por_componente AS
-SELECT idDados, dateDado, ', @lista_componentes, ' FROM Dados GROUP BY idDados, dateDado;');
-        
-PREPARE stmt FROM @comando_sql;
-
-EXECUTE stmt;
-
 DELIMITER //
 CREATE PROCEDURE CADASTRAR_MOTORISTA(IN 
 	US_NOME VARCHAR(50), 
@@ -105,3 +90,17 @@ INSERT INTO Componentes (idComponentes, nomeComponente) VALUES (NULL, "Disco");
 
 select * from Dados;
 select * from Componentes;
+
+SET @lista_componentes = (SELECT GROUP_CONCAT( (
+	CONCAT(
+		"MAX(CASE WHEN fkComponentes = ", Componentes.idComponentes, " THEN ROUND(dado, 2) END) AS '", Componentes.nomeComponente, "'"
+	)
+) SEPARATOR ", ") FROM Componentes
+);
+
+SET @comando_sql = CONCAT('CREATE VIEW dados_por_componente AS
+SELECT idDados, dateDado, ', @lista_componentes, ' FROM Dados GROUP BY idDados, dateDado;');
+        
+PREPARE stmt FROM @comando_sql;
+
+EXECUTE stmt;
