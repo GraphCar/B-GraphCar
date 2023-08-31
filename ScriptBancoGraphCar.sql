@@ -1,6 +1,7 @@
--- SQLBook: Code
-CREATE USER 'GraphUser'@'localhost' IDENTIFIED BY 'Graph2023';
-GRANT ALL PRIVILEGES ON GraphCar.* TO 'GraphUser'@'localhost';
+DELETE FROM mysql.user where user = 'GraphUser';
+
+CREATE USER 'GraphUser'@'%' IDENTIFIED BY 'Graph2023';
+GRANT ALL PRIVILEGES ON GraphCar.* TO 'GraphUser'@'%';
 FLUSH PRIVILEGES;
 
 DROP DATABASE IF EXISTS GraphCar;
@@ -10,27 +11,25 @@ USE GraphCar;
 CREATE TABLE Usuario(
 	idUsuario INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(50),
-    email VARCHAR(100),
+    email VARCHAR(100) UNIQUE,
     senha VARCHAR(64),
-    cpf CHAR (11), 
+    cpf CHAR (11) UNIQUE,
+    foto VARCHAR(100), 
     adm TINYINT
 );
-
 CREATE TABLE ModeloCarro(
-	idCarro INT PRIMARY KEY AUTO_INCREMENT,
-    modelo VARCHAR(30),
-    versaoSoftware VARCHAR(60)
+	idModelo INT PRIMARY KEY AUTO_INCREMENT,
+    Modelo VARCHAR(30),
+    VersaoSoftware VARCHAR(60)
 );
-
 CREATE TABLE Carro(
 	idCarro INT PRIMARY KEY AUTO_INCREMENT,
-    placa VARCHAR(15),
+    Placa VARCHAR(15) UNIQUE,
 	fkUsuario INT,
     fkModelo INT,
     CONSTRAINT fhkUsuario FOREIGN KEY (fkUsuario) REFERENCES Usuario(idUsuario),
-    CONSTRAINT fhkModelo FOREIGN KEY (fkModelo) REFERENCES ModeloCarro(idCarro)
+    CONSTRAINT fhkModelo FOREIGN KEY (fkModelo) REFERENCES ModeloCarro(idModelo)
 );
-
 CREATE TABLE Componentes(
 	idComponentes INT PRIMARY KEY AUTO_INCREMENT,
     NomeComponente VARCHAR(10),
@@ -38,7 +37,6 @@ CREATE TABLE Componentes(
     fkModelo INT,
     FOREIGN KEY (fkModelo) REFERENCES ModeloCarro(idModelo)
 );
-
 CREATE TABLE Dados(
 	idDados INT PRIMARY KEY AUTO_INCREMENT,
     dado FLOAT,
