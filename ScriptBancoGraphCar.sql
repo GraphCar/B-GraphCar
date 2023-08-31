@@ -33,8 +33,10 @@ CREATE TABLE Carro(
 
 CREATE TABLE Componentes(
 	idComponentes INT PRIMARY KEY AUTO_INCREMENT,
-    nomeComponente VARCHAR(15),
-    versaoDriver VARCHAR(15)
+    NomeComponente VARCHAR(10),
+    VersaoDriver VARCHAR(15),
+    fkModelo INT,
+    FOREIGN KEY (fkModelo) REFERENCES ModeloCarro(idModelo)
 );
 
 CREATE TABLE Dados(
@@ -69,10 +71,31 @@ PREPARE stmt FROM @comando_sql;
 
 EXECUTE stmt;
 
+DELIMITER //
+CREATE PROCEDURE CADASTRAR_MOTORISTA(IN 
+	US_NOME VARCHAR(50), 
+    US_EMAIL VARCHAR(100), 
+    US_SENHA VARCHAR(64), 
+	US_CPF VARCHAR(11),
+    US_ADM TINYINT, 
+    C_PLACA VARCHAR(15), 
+    MC_MODELO VARCHAR(30)
+    
+    ) BEGIN 
+	INSERT INTO usuario (nome, email, senha, CPF, adm)
+	VALUES ( us_nome, us_email, us_senha, us_CPF, us_adm);
+    INSERT INTO ModeloCarro (Modelo)
+    VALUES (mc_modelo);
+	INSERT INTO Carro (Placa , fkUsuario, fkModelo)
+	VALUES ( c_placa,
+    (SELECT idUsuario FROM usuario WHERE email = us_email),
+    (SELECT idModelo FROM ModeloCarro WHERE idModelo = (SELECT idUsuario FROM usuario WHERE email = us_email)));
+	END// 
+DELIMITER ;
 INSERT INTO Usuario (nome, email, senha, cpf, adm) values ('ADM', 'admin@graphcar.com', '$2b$10$M/CbWCDYZcYYDnTUs1nfPOu/U665hzfQDSBucm56MxAy4ldau2YAi', '000', 3);
 
 INSERT INTO Componentes (idComponentes, nomeComponente) VALUES (NULL, "CPU");
-INSERT INTO Componentes (idComponentes, nomeComponente) VALUES (NULL, "Memória RAM");
+INSERT INTO Componentes (idComponentes, nomeComponente) VALUES (NULL, "RAM");
 INSERT INTO Componentes (idComponentes, nomeComponente) VALUES (NULL, "Disco");
 
 
