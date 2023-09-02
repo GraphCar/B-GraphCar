@@ -1,3 +1,4 @@
+-- Active: 1693362679120@@127.0.0.1@3306@bd_smfp
 DELETE FROM mysql.user where user = 'GraphUser';
 
 CREATE USER 'GraphUser'@'%' IDENTIFIED BY 'Graph2023';
@@ -15,7 +16,7 @@ CREATE TABLE Usuario(
     senha VARCHAR(64),
     cpf CHAR (11) UNIQUE,
     foto VARCHAR(100), 
-    adm TINYINT
+    nivelAcesso TINYINT
 );
 
 CREATE TABLE ModeloCarro(
@@ -79,7 +80,7 @@ CREATE PROCEDURE CADASTRAR_MOTORISTA(IN
     (SELECT idModelo FROM ModeloCarro WHERE idModelo = (SELECT idUsuario FROM usuario WHERE email = us_email)));
 	END// 
 DELIMITER ;
-INSERT INTO Usuario (nome, email, senha, cpf, adm) values ('ADM', 'admin@graphcar.com', '$2b$10$M/CbWCDYZcYYDnTUs1nfPOu/U665hzfQDSBucm56MxAy4ldau2YAi', '000', 3);
+INSERT INTO Usuario (nome, email, senha, cpf, nivelAcesso) values ('ADM', 'admin@graphcar.com', '$2b$10$M/CbWCDYZcYYDnTUs1nfPOu/U665hzfQDSBucm56MxAy4ldau2YAi', '000', 3);
 
 INSERT INTO Componentes (idComponentes, nomeComponente) VALUES (NULL, "CPU");
 INSERT INTO Componentes (idComponentes, nomeComponente) VALUES (NULL, "RAM");
