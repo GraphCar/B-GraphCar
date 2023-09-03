@@ -38,6 +38,7 @@ CREATE TABLE Carro(
 CREATE TABLE Componentes(
 	idComponentes INT PRIMARY KEY AUTO_INCREMENT,
     NomeComponente VARCHAR(10),
+    descricao VARCHAR(20),
     VersaoDriver VARCHAR(15),
     fkModelo INT,
     FOREIGN KEY (fkModelo) REFERENCES ModeloCarro(idModelo)
@@ -82,12 +83,16 @@ CREATE PROCEDURE CADASTRAR_MOTORISTA(IN
     (SELECT idModelo FROM ModeloCarro WHERE idModelo = (SELECT idUsuario FROM usuario WHERE email = us_email)));
 	END// 
 DELIMITER ;
-INSERT INTO Usuario (nome, email, senha, cpf, foto, nivelAcesso) values ('ADM', 'admin@graphcar.com', '$2b$10$M/CbWCDYZcYYDnTUs1nfPOu/U665hzfQDSBucm56MxAy4ldau2YAi', '000', 'user.png', 3);
+CALL CADASTRAR_MOTORISTA ('ADM', 'admin@graphcar.com', '$2b$10$M/CbWCDYZcYYDnTUs1nfPOu/U665hzfQDSBucm56MxAy4ldau2YAi', 
+'000', 'user.png', 3, 'AAA 9999', 'Model S');
 
-INSERT INTO Componentes (idComponentes, nomeComponente) VALUES (NULL, "CPU");
-INSERT INTO Componentes (idComponentes, nomeComponente) VALUES (NULL, "RAM");
-INSERT INTO Componentes (idComponentes, nomeComponente) VALUES (NULL, "Disco");
+INSERT INTO Componentes (idComponentes, nomeComponente, descricao, fkModelo) VALUES (NULL, "CPU", 'AMD Zen 1', 1);
+INSERT INTO Componentes (idComponentes, nomeComponente, descricao, fkModelo) VALUES (NULL, "RAM", '32 Gb',1);
+INSERT INTO Componentes (idComponentes, nomeComponente, descricao, fkModelo) VALUES (NULL, "Disco", '1 Tb', 1);
+INSERT INTO Componentes (idComponentes, nomeComponente, descricao, fkModelo) VALUES (NULL, "GPU", 'Navi 23 GPU RDNA 2', 1);
 
+SELECT NomeComponente, descricao FROM componentes 
+        JOIN modelocarro ON fkModelo = idModelo WHERE idModelo = 1;
 
 SELECT * FROM usuario;
 select * from Dados;
