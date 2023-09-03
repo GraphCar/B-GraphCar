@@ -1,8 +1,9 @@
--- Active: 1693362679120@@127.0.0.1@3306@bd_smfp
+-- Active: 1685408949990@@localhost@3306@graphcar
+DROP USER 'GraphUser'@'localhost';
 DELETE FROM mysql.user where user = 'GraphUser';
 
-CREATE USER 'GraphUser'@'%' IDENTIFIED BY 'Graph2023';
-GRANT ALL PRIVILEGES ON GraphCar.* TO 'GraphUser'@'%';
+CREATE USER 'GraphUser'@'localhost' IDENTIFIED BY 'Graph2023';
+GRANT ALL PRIVILEGES ON GraphCar.* TO 'GraphUser'@'localhost';
 FLUSH PRIVILEGES;
 
 DROP DATABASE IF EXISTS GraphCar;
@@ -65,13 +66,14 @@ CREATE PROCEDURE CADASTRAR_MOTORISTA(IN
     US_EMAIL VARCHAR(100), 
     US_SENHA VARCHAR(64), 
 	US_CPF VARCHAR(11),
-    US_ADM TINYINT, 
+    US_FOTO VARCHAR(100),
+    US_NIVELACESSO TINYINT, 
     C_PLACA VARCHAR(15), 
     MC_MODELO VARCHAR(30)
     
     ) BEGIN 
-	INSERT INTO usuario (nome, email, senha, CPF, adm)
-	VALUES ( us_nome, us_email, us_senha, us_CPF, us_adm);
+	INSERT INTO usuario (nome, email, senha, CPF, foto, nivelAcesso)
+	VALUES ( us_nome, us_email, us_senha, us_CPF, us_foto, us_nivelacesso);
     INSERT INTO ModeloCarro (Modelo)
     VALUES (mc_modelo);
 	INSERT INTO Carro (Placa , fkUsuario, fkModelo)
@@ -80,15 +82,14 @@ CREATE PROCEDURE CADASTRAR_MOTORISTA(IN
     (SELECT idModelo FROM ModeloCarro WHERE idModelo = (SELECT idUsuario FROM usuario WHERE email = us_email)));
 	END// 
 DELIMITER ;
-INSERT INTO Usuario (nome, email, senha, cpf, nivelAcesso) values ('ADM', 'admin@graphcar.com', '$2b$10$M/CbWCDYZcYYDnTUs1nfPOu/U665hzfQDSBucm56MxAy4ldau2YAi', '000', 3);
+INSERT INTO Usuario (nome, email, senha, cpf, foto, nivelAcesso) values ('ADM', 'admin@graphcar.com', '$2b$10$M/CbWCDYZcYYDnTUs1nfPOu/U665hzfQDSBucm56MxAy4ldau2YAi', '000', 'user.png', 3);
 
 INSERT INTO Componentes (idComponentes, nomeComponente) VALUES (NULL, "CPU");
 INSERT INTO Componentes (idComponentes, nomeComponente) VALUES (NULL, "RAM");
 INSERT INTO Componentes (idComponentes, nomeComponente) VALUES (NULL, "Disco");
 
 
-
-
+SELECT * FROM usuario;
 select * from Dados;
 select * from Componentes;
 
