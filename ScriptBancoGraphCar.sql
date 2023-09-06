@@ -75,14 +75,21 @@ CREATE PROCEDURE CADASTRAR_MOTORISTA(IN
     ) BEGIN 
 	INSERT INTO usuario (nome, email, senha, CPF, foto, nivelAcesso)
 	VALUES ( us_nome, us_email, us_senha, us_CPF, us_foto, us_nivelacesso);
-    INSERT INTO ModeloCarro (Modelo)
-    VALUES (mc_modelo);
+    -- INSERT INTO ModeloCarro (Modelo)
+    -- VALUES (mc_modelo);
 	INSERT INTO Carro (Placa , fkUsuario, fkModelo)
 	VALUES ( c_placa,
     (SELECT idUsuario FROM usuario WHERE email = us_email),
-    (SELECT idModelo FROM ModeloCarro WHERE idModelo = (SELECT idUsuario FROM usuario WHERE email = us_email)));
+    (SELECT idModelo FROM ModeloCarro WHERE modelo = mc_modelo));
 	END// 
 DELIMITER ;
+
+INSERT INTO modelocarro (idModelo, modelo) VALUES (NULL, 'Model S'),
+                                                  (NULL, 'Model 3'),
+                                                  (NULL, 'Model X'),
+                                                  (NULL, 'Model Y');
+
+
 CALL CADASTRAR_MOTORISTA ('ADM', 'admin@graphcar.com', '$2b$10$M/CbWCDYZcYYDnTUs1nfPOu/U665hzfQDSBucm56MxAy4ldau2YAi', 
 '55555555555', 'user.png', 3, 'AAA 9999', 'Model S');
 
@@ -94,7 +101,12 @@ INSERT INTO Componentes (idComponentes, nomeComponente, descricao, fkModelo) VAL
 SELECT NomeComponente, descricao FROM componentes 
         JOIN modelocarro ON fkModelo = idModelo WHERE idModelo = 1;
 
+SELECT * FROM carro 
+        JOIN modelocarro 
+        JOIN usuario ON fkModelo = idModelo and idUsuario = fkUsuario 
+
 SELECT * FROM usuario;
+SELECT * FROM modelocarro;
 select * from Dados;
 select * from Componentes;
 
