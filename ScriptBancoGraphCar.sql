@@ -100,13 +100,28 @@ INSERT INTO modelocarro (idModelo, modelo) VALUES (NULL, 'Model S'),
 CALL CADASTRAR_MOTORISTA ('ADM', 'admin@graphcar.com', '$2b$10$M/CbWCDYZcYYDnTUs1nfPOu/U665hzfQDSBucm56MxAy4ldau2YAi', 
 '55555555555', 'user.png', 3, 'AAA 9999', 1);
 
-INSERT INTO Componentes (idComponentes, nomeComponente, descricao) VALUES (NULL, "CPU", 'AMD Zen 1');
-INSERT INTO Componentes (idComponentes, nomeComponente, descricao) VALUES (NULL, "RAM", '32 Gb');
-INSERT INTO Componentes (idComponentes, nomeComponente, descricao) VALUES (NULL, "Disco", '1 Tb');
-INSERT INTO Componentes (idComponentes, nomeComponente, descricao) VALUES (NULL, "GPU", 'Navi 23 GPU RDNA 2');
+INSERT INTO Componentes (idComponentes, nomeComponente) VALUES (NULL, "CPU");
+INSERT INTO Componentes (idComponentes, nomeComponente) VALUES (NULL, "RAM");
+INSERT INTO Componentes (idComponentes, nomeComponente) VALUES (NULL, "Disco");
+INSERT INTO Componentes (idComponentes, nomeComponente) VALUES (NULL, "GPU");
 
 SELECT NomeComponente, descricao FROM componentes 
         JOIN modelocarro ON fkModelo = idModelo WHERE idModelo = 1;
+
+SELECT idModelo,
+                        u.* FROM usuario u
+                        LEFT JOIN carro ON carro.`fkUsuario` = u.`idUsuario`
+                        LEFT JOIN modeloCarro ON carro.`fkModelo` = modeloCarro.`idModelo`
+                        WHERE u.email = 'h@gmail.com';
+
+SELECT  idModelo,
+            idUsuario, 
+            nome,
+            foto
+            FROM usuario u 
+            JOIN Carro ON carro.fkUsuario = u.idUsuario
+            JOIN ModeloCarro ON carro.fkModelo = modeloCarro.idModelo
+            WHERE idUsuario = 5;
 
 SELECT * FROM carro 
         JOIN modelocarro 
@@ -116,6 +131,7 @@ SELECT * FROM usuario;
 SELECT * FROM modelocarro;
 select * from Dados;
 select * from Componentes;
+select * from modelocomponente;
 
 SET @lista_componentes = (SELECT GROUP_CONCAT( (
 	CONCAT(
