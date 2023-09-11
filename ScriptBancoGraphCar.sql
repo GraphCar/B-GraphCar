@@ -1,9 +1,9 @@
 -- Active: 1685408949990@@localhost@3306@graphcar
-DROP USER 'GraphUser'@'localhost';
+DROP USER 'GraphUser'@'%';
 DELETE FROM mysql.user where user = 'GraphUser';
 
-CREATE USER 'GraphUser'@'localhost' IDENTIFIED BY 'Graph2023';
-GRANT ALL PRIVILEGES ON GraphCar.* TO 'GraphUser'@'localhost';
+CREATE USER 'GraphUser'@'%' IDENTIFIED BY 'Graph2023';
+GRANT ALL PRIVILEGES ON GraphCar.* TO 'GraphUser'@'%';
 FLUSH PRIVILEGES;
 
 DROP DATABASE IF EXISTS GraphCar;
@@ -39,10 +39,16 @@ CREATE TABLE Componentes(
 	idComponentes INT PRIMARY KEY AUTO_INCREMENT,
     NomeComponente VARCHAR(10),
     descricao VARCHAR(20),
-    VersaoDriver VARCHAR(15),
-    fkModelo INT,
-    FOREIGN KEY (fkModelo) REFERENCES ModeloCarro(idModelo)
+    VersaoDriver VARCHAR(15)
 );
+
+CREATE TABLE modeloComponente(
+	idModeloComponente INT PRIMARY KEY AUTO_INCREMENT,
+    fkComponente INT,
+    fkModeloCarro INT,
+    FOREIGN KEY(fkComponente) REFERENCES Componentes(idComponentes),
+    FOREIGN KEY(fkModeloCarro) REFERENCES ModeloCarro(idModelo)
+    );
 
 CREATE TABLE Dados(
 	idDados INT PRIMARY KEY AUTO_INCREMENT,
