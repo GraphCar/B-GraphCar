@@ -1,4 +1,4 @@
 # B-GraphCar
-![image](https://github.com/GraphCar/B-GraphCar/assets/67590378/facf9742-90f0-4bd2-bcdc-f9b1de443c20)
+<img width="712" alt="Captura de tela 2023-09-11 113019" src="https://github.com/GraphCar/B-GraphCar/assets/125585328/d9f01fa3-8854-4441-bae4-0944296d4dd7">
 
 
