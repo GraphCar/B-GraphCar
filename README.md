@@ -1,4 +1,4 @@
 # B-GraphCar
-![graphcar_logico](https://github.com/GraphCar/B-GraphCar/assets/125585328/f5bde2b4-fe02-4dd5-9c0f-f1afe60840b7)
+![graphcar_logico](https://github.com/GraphCar/B-GraphCar/assets/125585328/a75ff82e-f257-41ca-aab6-ac4a070e6287)
 
 
