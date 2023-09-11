@@ -1,4 +1,5 @@
--- Active: 1685408949990@@localhost@3306@graphcar
+-- SQLBook: Code
+-- Active: 1692980043447@@127.0.0.1@3306@graphcar
 DROP USER 'GraphUser'@'%';
 DELETE FROM mysql.user where user = 'GraphUser';
 
@@ -99,10 +100,10 @@ INSERT INTO modelocarro (idModelo, modelo) VALUES (NULL, 'Model S'),
 CALL CADASTRAR_MOTORISTA ('ADM', 'admin@graphcar.com', '$2b$10$M/CbWCDYZcYYDnTUs1nfPOu/U665hzfQDSBucm56MxAy4ldau2YAi', 
 '55555555555', 'user.png', 3, 'AAA 9999', 1);
 
-INSERT INTO Componentes (idComponentes, nomeComponente, descricao, fkModelo) VALUES (NULL, "CPU", 'AMD Zen 1', 1);
-INSERT INTO Componentes (idComponentes, nomeComponente, descricao, fkModelo) VALUES (NULL, "RAM", '32 Gb',1);
-INSERT INTO Componentes (idComponentes, nomeComponente, descricao, fkModelo) VALUES (NULL, "Disco", '1 Tb', 1);
-INSERT INTO Componentes (idComponentes, nomeComponente, descricao, fkModelo) VALUES (NULL, "GPU", 'Navi 23 GPU RDNA 2', 1);
+INSERT INTO Componentes (idComponentes, nomeComponente, descricao) VALUES (NULL, "CPU", 'AMD Zen 1');
+INSERT INTO Componentes (idComponentes, nomeComponente, descricao) VALUES (NULL, "RAM", '32 Gb');
+INSERT INTO Componentes (idComponentes, nomeComponente, descricao) VALUES (NULL, "Disco", '1 Tb');
+INSERT INTO Componentes (idComponentes, nomeComponente, descricao) VALUES (NULL, "GPU", 'Navi 23 GPU RDNA 2');
 
 SELECT NomeComponente, descricao FROM componentes 
         JOIN modelocarro ON fkModelo = idModelo WHERE idModelo = 1;
