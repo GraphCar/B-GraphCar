@@ -1,5 +1,5 @@
 -- SQLBook: Code
--- Active: 1692980043447@@127.0.0.1@3306@graphcar
+-- Active: 1685408949990@@localhost@3306@graphcar
 DROP USER 'GraphUser'@'%';
 DELETE FROM mysql.user where user = 'GraphUser';
 
@@ -39,7 +39,6 @@ CREATE TABLE Carro(
 CREATE TABLE Componentes(
 	idComponentes INT PRIMARY KEY AUTO_INCREMENT,
     NomeComponente VARCHAR(10),
-    descricao VARCHAR(20),
     VersaoDriver VARCHAR(15)
 );
 
@@ -82,8 +81,6 @@ CREATE PROCEDURE CADASTRAR_MOTORISTA(IN
     ) BEGIN 
 	INSERT INTO usuario (nome, email, senha, CPF, foto, nivelAcesso)
 	VALUES ( us_nome, us_email, us_senha, us_CPF, us_foto, us_nivelacesso);
-    -- INSERT INTO ModeloCarro (Modelo)
-    -- VALUES (mc_modelo);
 	INSERT INTO Carro (Placa , fkUsuario, fkModelo)
 	VALUES ( c_placa,
     (SELECT idUsuario FROM usuario WHERE email = us_email),
@@ -105,14 +102,19 @@ INSERT INTO Componentes (idComponentes, nomeComponente) VALUES (NULL, "RAM");
 INSERT INTO Componentes (idComponentes, nomeComponente) VALUES (NULL, "Disco");
 INSERT INTO Componentes (idComponentes, nomeComponente) VALUES (NULL, "GPU");
 
+INSERT INTO modelocomponente(fkComponente, fkModeloCarro) VALUES (1, 1), (2, 1), (3, 1), (4, 1),
+                                                                 (1, 2), (2, 2), (3, 2), (4, 2),
+                                                                 (1, 3), (2, 3), (3, 3), (4, 3),
+                                                                 (1, 4), (2, 4), (3, 4), (4, 4);
+
 SELECT NomeComponente, descricao FROM componentes 
         JOIN modelocarro ON fkModelo = idModelo WHERE idModelo = 1;
 
 SELECT idModelo,
-                        u.* FROM usuario u
-                        LEFT JOIN carro ON carro.`fkUsuario` = u.`idUsuario`
-                        LEFT JOIN modeloCarro ON carro.`fkModelo` = modeloCarro.`idModelo`
-                        WHERE u.email = 'h@gmail.com';
+            u.* FROM usuario u
+            LEFT JOIN carro ON carro.fkUsuario = u.idUsuario
+            LEFT JOIN modeloCarro ON carro.fkModelo = modeloCarro.idModelo
+            WHERE u.email = 'h@gmail.com';
 
 SELECT  idModelo,
             idUsuario, 
