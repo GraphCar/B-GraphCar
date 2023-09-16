@@ -17,7 +17,7 @@ CREATE TABLE Usuario(
     email VARCHAR(100) UNIQUE,
     senha VARCHAR(64),
     cpf CHAR (11) UNIQUE,
-    foto VARCHAR(100), 
+    foto VARCHAR(200), 
     nivelAcesso TINYINT
 );
 
@@ -106,9 +106,6 @@ INSERT INTO modelocomponente(fkComponente, fkModeloCarro) VALUES (1, 1), (2, 1),
                                                                  (1, 2), (2, 2), (3, 2), (4, 2),
                                                                  (1, 3), (2, 3), (3, 3), (4, 3),
                                                                  (1, 4), (2, 4), (3, 4), (4, 4);
-
-SELECT NomeComponente, descricao FROM componentes 
-        JOIN modelocarro ON fkModelo = idModelo WHERE idModelo = 1;
 
 SELECT idModelo,
             u.* FROM usuario u
