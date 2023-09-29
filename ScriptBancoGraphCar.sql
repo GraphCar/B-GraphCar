@@ -23,13 +23,13 @@ CREATE TABLE Usuario(
 
 CREATE TABLE ModeloCarro(
 	idModelo INT PRIMARY KEY AUTO_INCREMENT,
-    Modelo VARCHAR(30),
-    VersaoSoftware VARCHAR(60)
+    modelo VARCHAR(30),
+    versaoSoftware VARCHAR(60)
 );
 
 CREATE TABLE Carro(
 	idCarro INT PRIMARY KEY AUTO_INCREMENT,
-    Placa VARCHAR(15) UNIQUE,
+    placa VARCHAR(15) UNIQUE,
 	fkUsuario INT,
     fkModelo INT,
     CONSTRAINT fhkUsuario FOREIGN KEY (fkUsuario) REFERENCES Usuario(idUsuario),
@@ -38,11 +38,12 @@ CREATE TABLE Carro(
 
 CREATE TABLE Componentes(
 	idComponentes INT PRIMARY KEY AUTO_INCREMENT,
-    NomeComponente VARCHAR(10),
-    VersaoDriver VARCHAR(15)
+    nomeComponente VARCHAR(10),
+    versaoDriver VARCHAR(15),
+    unidade VARCHAR(10)
 );
 
-CREATE TABLE modeloComponente(
+CREATE TABLE ModeloComponente(
 	idModeloComponente INT PRIMARY KEY AUTO_INCREMENT,
     fkComponente INT,
     fkModeloCarro INT,
@@ -52,13 +53,16 @@ CREATE TABLE modeloComponente(
 
 CREATE TABLE Dados(
 	idDados INT PRIMARY KEY AUTO_INCREMENT,
-    dado FLOAT,
-    medida VARCHAR(10),
+    cpuUso DECIMAL(5,2),
+    cpuTemperatura DECIMAL(5,2),
+    gpuUso DECIMAL(5,2),
+    gpuTemperatura DECIMAL(5,2),
+    memoria DECIMAL(7,2),
+    bateriaNivel DECIMAL(5,2),
+    bateriaTaxa DECIMAL(7,2),
     dateDado DATETIME,
     fkCarro INT,
-    fkComponentes INT,
-    CONSTRAINT fhkCarro FOREIGN KEY (fkCarro) REFERENCES Carro(idCarro),
-    CONSTRAINT fhkComponentes FOREIGN KEY (fkComponentes) REFERENCES Componentes(idComponentes)
+    CONSTRAINT fkCarro FOREIGN KEY (fkCarro) REFERENCES Carro(idCarro)
 );
 
 /* SELECT idDados, 
@@ -139,9 +143,9 @@ SET @lista_componentes = (SELECT GROUP_CONCAT( (
 ) SEPARATOR ", ") FROM Componentes
 );
 
-SET @comando_sql = CONCAT('CREATE VIEW dados_por_componente AS
-SELECT idDados, dateDado, ', @lista_componentes, ' FROM Dados GROUP BY idDados, dateDado;');
+-- SET @comando_sql = CONCAT('CREATE VIEW dados_por_componente AS
+-- SELECT idDados, dateDado, ', @lista_componentes, ' FROM Dados GROUP BY idDados, dateDado;');
         
-PREPARE stmt FROM @comando_sql;
+-- PREPARE stmt FROM @comando_sql;
 
-EXECUTE stmt;
+-- EXECUTE stmt;
