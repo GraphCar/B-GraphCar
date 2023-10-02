@@ -111,6 +111,42 @@ INSERT INTO modelocomponente(fkComponente, fkModeloCarro) VALUES (1, 1), (2, 1),
                                                                  (1, 3), (2, 3), (3, 3), (4, 3),
                                                                  (1, 4), (2, 4), (3, 4), (4, 4);
 
+CREATE OR REPLACE VIEW alertas_gerais AS
+SELECT SUM(CASE WHEN cpuUso > 70 THEN 1 ELSE 0 END) as cpuAlerta,
+	SUM(CASE WHEN cpuUso > 90 THEN 1 ELSE 0 END) as cpuCritico,
+    SUM(CASE WHEN cpuTemperatura > 70 THEN 1 ELSE 0 END) as cpuTempAlerta,
+    SUM(CASE WHEN cpuTemperatura > 90 THEN 1 ELSE 0 END) as cpuTempCritico,
+    SUM(CASE WHEN gpuUso > 70 THEN 1 ELSE 0 END) as gpuAlerta,
+    SUM(CASE WHEN gpuUso > 90 THEN 1 ELSE 0 END) as gpuCritico,
+    SUM(CASE WHEN gpuTemperatura > 70 THEN 1 ELSE 0 END) as gpuTempAlerta,
+    SUM(CASE WHEN gpuTemperatura > 90 THEN 1 ELSE 0 END) as gpuTempCritico,
+    SUM(CASE WHEN memoria > 70 THEN 1 ELSE 0 END) as ramAlerta,
+    SUM(CASE WHEN memoria > 90 THEN 1 ELSE 0 END) as ramCritico,
+    SUM(CASE WHEN bateriaNivel < 20  THEN 1 ELSE 0 END) as bateriaAlerta,
+    SUM(CASE WHEN bateriaNivel < 5 THEN 1 ELSE 0 END) as bateriaCritico,
+    SUM(CASE WHEN bateriaTaxa > 70 THEN 1 ELSE 0 END) as bateriaTaxaAlerta,
+    SUM(CASE WHEN bateriaTaxa > 90 THEN 1 ELSE 0 END) as bateriaTaxaCritico
+	FROM Dados;
+
+CREATE OR REPLACE VIEW alertas_ultimo_mes AS
+SELECT DAY(dateDado) as dia, SUM(CASE WHEN cpuUso > 70 THEN 1 ELSE 0 END) as cpuAlerta,
+	SUM(CASE WHEN cpuUso > 90 THEN 1 ELSE 0 END) as cpuCritico,
+    SUM(CASE WHEN cpuTemperatura > 70 THEN 1 ELSE 0 END) as cpuTempAlerta,
+    SUM(CASE WHEN cpuTemperatura > 90 THEN 1 ELSE 0 END) as cpuTempCritico,
+    SUM(CASE WHEN gpuUso > 70 THEN 1 ELSE 0 END) as gpuAlerta,
+    SUM(CASE WHEN gpuUso > 90 THEN 1 ELSE 0 END) as gpuCritico,
+    SUM(CASE WHEN gpuTemperatura > 70 THEN 1 ELSE 0 END) as gpuTempAlerta,
+    SUM(CASE WHEN gpuTemperatura > 90 THEN 1 ELSE 0 END) as gpuTempCritico,
+    SUM(CASE WHEN memoria > 70 THEN 1 ELSE 0 END) as ramAlerta,
+    SUM(CASE WHEN memoria > 90 THEN 1 ELSE 0 END) as ramCritico,
+    SUM(CASE WHEN bateriaNivel < 20 THEN 1 ELSE 0 END) as bateriaAlerta,
+    SUM(CASE WHEN bateriaNivel < 5 THEN 1 ELSE 0 END) as bateriaCritico,
+    SUM(CASE WHEN bateriaTaxa > 70 THEN 1 ELSE 0 END) as bateriaTaxaAlerta,
+    SUM(CASE WHEN bateriaTaxa > 90 THEN 1 ELSE 0 END) as bateriaTaxaCritico
+	FROM Dados WHERE dateDado > DATE_SUB(now(), INTERVAL 30 DAY) GROUP BY dia;
+
+SELECT * FROM alertas_ultimo_mes;
+
 SELECT idModelo,
             u.* FROM usuario u
             LEFT JOIN carro ON carro.fkUsuario = u.idUsuario
