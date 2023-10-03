@@ -129,7 +129,7 @@ SELECT SUM(CASE WHEN cpuUso > 70 THEN 1 ELSE 0 END) as cpuAlerta,
 	FROM Dados;
 
 CREATE OR REPLACE VIEW alertas_ultimo_mes AS
-SELECT DAY(dateDado) as dia, SUM(CASE WHEN cpuUso > 70 THEN 1 ELSE 0 END) as cpuAlerta,
+SELECT CONCAT(DAY(dateDado),"/", MONTH(dateDado)) as dia, SUM(CASE WHEN cpuUso > 70 THEN 1 ELSE 0 END) as cpuAlerta,
 	SUM(CASE WHEN cpuUso > 90 THEN 1 ELSE 0 END) as cpuCritico,
     SUM(CASE WHEN cpuTemperatura > 70 THEN 1 ELSE 0 END) as cpuTempAlerta,
     SUM(CASE WHEN cpuTemperatura > 90 THEN 1 ELSE 0 END) as cpuTempCritico,
@@ -144,6 +144,7 @@ SELECT DAY(dateDado) as dia, SUM(CASE WHEN cpuUso > 70 THEN 1 ELSE 0 END) as cpu
     SUM(CASE WHEN bateriaTaxa > 70 THEN 1 ELSE 0 END) as bateriaTaxaAlerta,
     SUM(CASE WHEN bateriaTaxa > 90 THEN 1 ELSE 0 END) as bateriaTaxaCritico
 	FROM Dados WHERE dateDado > DATE_SUB(now(), INTERVAL 30 DAY) GROUP BY dia;
+
 
 SELECT * FROM alertas_ultimo_mes;
 
@@ -169,6 +170,7 @@ SELECT * FROM carro
 SELECT * FROM usuario;
 SELECT * FROM modelocarro;
 select * from Dados;
+UPDATE Dados SET cpuUso = 75.0 WHERE idDados BETWEEN 78 AND 85;
 select * from Componentes;
 select * from modelocomponente;
 
