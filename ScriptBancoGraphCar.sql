@@ -129,7 +129,8 @@ SELECT SUM(CASE WHEN cpuUso > 70 THEN 1 ELSE 0 END) as cpuAlerta,
 	FROM Dados;
 
 CREATE OR REPLACE VIEW alertas_ultimo_mes AS
-SELECT CONCAT(DAY(dateDado),"/", MONTH(dateDado)) as dia, SUM(CASE WHEN cpuUso > 70 THEN 1 ELSE 0 END) as cpuAlerta,
+SELECT CONCAT(DAY(dateDado),"/", MONTH(dateDado)) as dia, 
+	SUM(CASE WHEN cpuUso > 70 THEN 1 ELSE 0 END) as cpuAlerta,
 	SUM(CASE WHEN cpuUso > 90 THEN 1 ELSE 0 END) as cpuCritico,
     SUM(CASE WHEN cpuTemperatura > 70 THEN 1 ELSE 0 END) as cpuTempAlerta,
     SUM(CASE WHEN cpuTemperatura > 90 THEN 1 ELSE 0 END) as cpuTempCritico,
@@ -145,8 +146,27 @@ SELECT CONCAT(DAY(dateDado),"/", MONTH(dateDado)) as dia, SUM(CASE WHEN cpuUso >
     SUM(CASE WHEN bateriaTaxa > 90 THEN 1 ELSE 0 END) as bateriaTaxaCritico
 	FROM Dados WHERE dateDado > DATE_SUB(now(), INTERVAL 30 DAY) GROUP BY dia;
 
-
+CREATE OR REPLACE VIEW dados_como_alerta AS
+SELECT idDados,
+    CASE WHEN cpuUso > 90 THEN 2 ELSE (CASE WHEN cpuUso > 70 THEN 1 ELSE 0 END) END AS cpuAlerta,
+    CASE WHEN cpuTemperatura > 90 THEN 2 ELSE (CASE WHEN cpuTemperatura > 70 THEN 1 ELSE 0 END) END AS cpuTempAlerta,
+    CASE WHEN gpuUso > 90 THEN 2 ELSE (CASE WHEN gpuUso > 70 THEN 1 ELSE 0 END) END AS gpuAlerta,
+    CASE WHEN gpuTemperatura > 90 THEN 2 ELSE (CASE WHEN gpuTemperatura > 70 THEN 1 ELSE 0 END) END AS gpuTempALerta,
+    CASE WHEN memoria > 90 THEN 2 ELSE (CASE WHEN memoria > 70 THEN 1 ELSE 0 END) END AS memoriaAlerta,
+	CASE WHEN bateriaNivel < 20 THEN 2 ELSE (CASE WHEN bateriaNivel < 5 THEN 1 ELSE 0 END) END AS bateriaNivelAlerta,
+	CASE WHEN bateriaTaxa > 90 THEN 2 ELSE (CASE WHEN bateriaTaxa > 70 THEN 1 ELSE 0 END) END AS bateriaTaxaAlerta,
+    dateDado,
+    fkCarro FROM Dados;
+    
+CREATE OR REPLACE VIEW alertas_cpu AS
+    SELECT idDados, fkCarro, cpuAlerta FROM dados_como_alerta dca1 
+    WHERE dca1.cpuAlerta > (SELECT cpuAlerta FROM dados_como_alerta dca2 WHERE dca1.fkCarro = dca2.fkCarro AND dca2.idDados = 
+    (SELECT MAX(dca3.idDados) FROM dados_como_alerta AS dca3 WHERE dca3.fkCarro = dca1.fkCarro AND dca3.idDados < dca1.idDados));
+    
+SELECT * FROM dados_como_alerta;
 SELECT * FROM alertas_ultimo_mes;
+SELECT * FROM alertas_cpu;
+2, 78, 91;
 
 SELECT idModelo,
             u.* FROM usuario u
