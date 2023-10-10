@@ -1,14 +1,13 @@
 -- SQLBook: Code
 -- Active: 1685408949990@@localhost@3306@graphcar
-DROP USER 'GraphUser'@'%';
+/*DROP USER 'GraphUser'@'%';
 DELETE FROM mysql.user where user = 'GraphUser';
-
+*/
 CREATE USER 'GraphUser'@'%' IDENTIFIED BY 'Graph2023';
 GRANT ALL PRIVILEGES ON GraphCar.* TO 'GraphUser'@'%';
 FLUSH PRIVILEGES;
 
-DROP DATABASE IF EXISTS GraphCar;
-CREATE DATABASE GraphCar;
+CREATE DATABASE IF NOT EXISTS GraphCar;
 USE GraphCar;
 
 CREATE TABLE Usuario(
@@ -64,6 +63,21 @@ CREATE TABLE Dados(
     fkCarro INT,
     CONSTRAINT fkCarro FOREIGN KEY (fkCarro) REFERENCES Carro(idCarro)
 );
+
+CREATE TABLE Servidor(
+	idServidor INT PRIMARY KEY AUTO_INCREMENT,
+    modeloServidor VARCHAR(45) NOT NULL,
+    hostname VARCHAR(45) ,
+    finalidadeServidor VARCHAR(45),
+    sistemaOperacional VARCHAR(45));
+    
+CREATE TABLE LoginMonitoramento(
+	idUsuario INT PRIMARY KEY AUTO_INCREMENT,
+    usuarioMonitoramento VARCHAR(45) NOT NULL,
+    senhaMonitoramento VARCHAR(45) NOT NULL,
+    fkServidor INT, FOREIGN KEY(fkServidor) REFERENCES Servidor(idServidor));
+
+/* Fim das tabelas!
 
 /* SELECT idDados, 
 	MAX(CASE WHEN fkComponentes = 1 THEN dado END) AS "CPU",
