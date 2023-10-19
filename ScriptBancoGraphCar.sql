@@ -42,13 +42,58 @@ CREATE TABLE Componentes(
     unidade VARCHAR(10)
 );
 
+CREATE TABLE Medida(
+	idMedida INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(20),
+    unidade VARCHAR(20),
+    limiteAlerta DECIMAL(5,2),
+    limiteCritico DECIMAL(5,2)
+);
+
+CREATE TABLE Servidor(
+	idServidor INT PRIMARY KEY AUTO_INCREMENT,
+    modeloServidor VARCHAR(45) NOT NULL,
+    hostname VARCHAR(45),
+    finalidadeServidor VARCHAR(45),
+    sistemaOperacional VARCHAR(45)
+);
+
+CREATE TABLE DadosServidor(
+	idDadosServidor INT PRIMARY KEY AUTO_INCREMENT,
+    cpuUso DECIMAL(5,2),
+    cpuTemperatura DECIMAL(5,2),
+    memoria DECIMAL(5,2),
+    disco DECIMAL(5,2),
+    dateDado DATETIME,
+    fkServidor INT,
+    FOREIGN KEY (fkServidor) REFERENCES Servidor(idServidor)
+);
+
+CREATE TABLE Processos(
+	idProcessos INT PRIMARY KEY AUTO_INCREMENT,
+    nomeProcesso VARCHAR(45),
+    grupoProcesso VARCHAR(45),
+    fkDadosServidor INT,
+    FOREIGN KEY (fkDadosServidor) REFERENCES DadosServidor(idDadosServidor)
+);
+
 CREATE TABLE ModeloComponente(
 	idModeloComponente INT PRIMARY KEY AUTO_INCREMENT,
     fkComponente INT,
-    fkModeloCarro INT,
+    fkModeloCarro INT NULL,
+    fkServidor INT NULL,
     FOREIGN KEY(fkComponente) REFERENCES Componentes(idComponentes),
-    FOREIGN KEY(fkModeloCarro) REFERENCES ModeloCarro(idModelo)
-    );
+    FOREIGN KEY(fkModeloCarro) REFERENCES ModeloCarro(idModelo),
+    FOREIGN KEY (fkServidor) REFERENCES Servidor(idServidor)
+);
+
+CREATE TABLE MedidaModeloComponente(
+	fkModeloComponente INT,
+    fkMedida INT,
+    FOREIGN KEY (fkModeloComponente) REFERENCES ModeloComponente(idModeloComponente),
+    FOREIGN KEY (fkMedida) REFERENCES Medida(idMedida),
+    PRIMARY KEY (fkModeloComponente, fkMedida)
+);
 
 CREATE TABLE Dados(
 	idDados INT PRIMARY KEY AUTO_INCREMENT,
@@ -56,26 +101,15 @@ CREATE TABLE Dados(
     cpuTemperatura DECIMAL(5,2),
     gpuUso DECIMAL(5,2),
     gpuTemperatura DECIMAL(5,2),
-    memoria DECIMAL(7,2),
+    memoria DECIMAL(5,2),
     bateriaNivel DECIMAL(5,2),
-    bateriaTaxa DECIMAL(7,2),
+    bateriaTaxa DECIMAL(5,2),
     dateDado DATETIME,
     fkCarro INT,
     CONSTRAINT fkCarro FOREIGN KEY (fkCarro) REFERENCES Carro(idCarro)
 );
 
-CREATE TABLE Servidor(
-	idServidor INT PRIMARY KEY AUTO_INCREMENT,
-    modeloServidor VARCHAR(45) NOT NULL,
-    hostname VARCHAR(45) ,
-    finalidadeServidor VARCHAR(45),
-    sistemaOperacional VARCHAR(45));
-    
-CREATE TABLE LoginMonitoramento(
-	idUsuario INT PRIMARY KEY AUTO_INCREMENT,
-    usuarioMonitoramento VARCHAR(45) NOT NULL,
-    senhaMonitoramento VARCHAR(45) NOT NULL,
-    fkServidor INT, FOREIGN KEY(fkServidor) REFERENCES Servidor(idServidor));
+
 
 /* Fim das tabelas!
 
@@ -119,11 +153,25 @@ INSERT INTO Componentes (idComponentes, nomeComponente) VALUES (NULL, "CPU");
 INSERT INTO Componentes (idComponentes, nomeComponente) VALUES (NULL, "RAM");
 INSERT INTO Componentes (idComponentes, nomeComponente) VALUES (NULL, "Disco");
 INSERT INTO Componentes (idComponentes, nomeComponente) VALUES (NULL, "GPU");
+INSERT INTO Componentes (idComponentes, nomeComponente) VALUES (NULL, "Bateria");
 
-INSERT INTO modelocomponente(fkComponente, fkModeloCarro) VALUES (1, 1), (2, 1), (3, 1), (4, 1),
-                                                                 (1, 2), (2, 2), (3, 2), (4, 2),
-                                                                 (1, 3), (2, 3), (3, 3), (4, 3),
-                                                                 (1, 4), (2, 4), (3, 4), (4, 4);
+INSERT INTO Medida (nome, unidade, limiteAlerta, limiteCritico) VALUES 
+	("temperatura", "°C", 70, 90),
+    ("uso", "%", 70, 90),
+    ("uso", "%", 20, 5);
+
+INSERT INTO modelocomponente(fkModeloCarro, fkComponente) VALUES (1, 1), (2, 1), (3, 1), (4, 1),	-- CPU
+                                                                 (1, 2), (2, 2), (3, 2), (4, 2),	-- RAM
+                                                                 (1, 3), (2, 3), (3, 3), (4, 3),	-- Disco
+                                                                 (1, 4), (2, 4), (3, 4), (4, 4),	-- GPU
+                                                                 (1, 5), (2, 5), (3, 5), (4, 5);	-- Bateria
+											
+INSERT INTO MedidaModeloComponente (fkModeloComponente, fkMedida) VALUES
+	(1,1), (1,2), (2,1), (2,2), (3,1), (3,2), (4,1), (4,2), 			-- CPU
+    (5,1), (6,1), (7,1), (8,1),											-- RAM
+    (9,1), (10,1), (11,1), (12,1), 										-- Disco
+    (13,1), (13,2), (14,1), (14,2), (15,1), (15,2), (16,1), (16,2), 	-- GPU
+    (17,1), (18,1), (19,1), (20,1); 									-- Bateria
 
 CREATE OR REPLACE VIEW alertas_gerais AS
 SELECT SUM(CASE WHEN cpuUso > 70 THEN 1 ELSE 0 END) as cpuAlerta,
@@ -178,7 +226,7 @@ CREATE OR REPLACE VIEW alertas_cpu AS
     (SELECT MAX(dca3.idDados) FROM dados_como_alerta AS dca3 WHERE dca3.fkCarro = dca1.fkCarro AND dca3.idDados < dca1.idDados));
     
 CREATE OR REPLACE VIEW alerta_atual AS
-SELECT d1.* FROM Dados d1 JOIN ( SELECT fkCarro, MAX(dateDado) AS ultimaHora 
+	SELECT d1.* FROM Dados d1 JOIN ( SELECT fkCarro, MAX(dateDado) AS ultimaHora 
 	FROM Dados GROUP BY fkCarro) d2 ON
     d2.fkCarro = d1.fkCarro AND d2.ultimaHora = d1.dateDado;
 
@@ -212,12 +260,6 @@ SELECT * FROM carro
         JOIN modelocarro 
         JOIN usuario ON fkModelo = idModelo and idUsuario = fkUsuario;
 
-SELECT * FROM usuario;
-SELECT * FROM modelocarro;
-select * from Dados;
-UPDATE Dados SET cpuUso = 75.0 WHERE idDados BETWEEN 78 AND 85;
-select * from Componentes;
-select * from modelocomponente;
 
 SET @lista_componentes = (SELECT GROUP_CONCAT( (
 	CONCAT(
