@@ -177,10 +177,21 @@ CREATE OR REPLACE VIEW alertas_cpu AS
     WHERE dca1.cpuAlerta > (SELECT cpuAlerta FROM dados_como_alerta dca2 WHERE dca1.fkCarro = dca2.fkCarro AND dca2.idDados = 
     (SELECT MAX(dca3.idDados) FROM dados_como_alerta AS dca3 WHERE dca3.fkCarro = dca1.fkCarro AND dca3.idDados < dca1.idDados));
     
+CREATE OR REPLACE VIEW alerta_atual AS
+SELECT d1.* FROM Dados d1 JOIN ( SELECT fkCarro, MAX(dateDado) AS ultimaHora 
+	FROM Dados GROUP BY fkCarro) d2 ON
+    d2.fkCarro = d1.fkCarro AND d2.ultimaHora = d1.dateDado;
+
+CREATE OR REPLACE VIEW alertas_concatenados AS 
+	SELECT fkCarro, 
+    GROUP_CONCAT(cpuAlerta) AS cpuConcat, 
+    GROUP_CONCAT(memoriaAlerta) AS memoriaConcat,
+    GROUP_CONCAT(bateriaNivelAlerta) AS bateriaNivelConcat
+    FROM dados_como_alerta GROUP BY fkCarro;
+
 SELECT * FROM dados_como_alerta;
 SELECT * FROM alertas_ultimo_mes;
 SELECT * FROM alertas_cpu;
-2, 78, 91;
 
 SELECT idModelo,
             u.* FROM usuario u
