@@ -110,8 +110,7 @@ CREATE TABLE Dados(
 );
 
 
-
-/* Fim das tabelas!
+-- Fim das tabelas!
 
 /* SELECT idDados, 
 	MAX(CASE WHEN fkComponentes = 1 THEN dado END) AS "CPU",
@@ -165,7 +164,7 @@ INSERT INTO modelocomponente(fkModeloCarro, fkComponente) VALUES (1, 1), (2, 1),
                                                                  (1, 3), (2, 3), (3, 3), (4, 3),	-- Disco
                                                                  (1, 4), (2, 4), (3, 4), (4, 4),	-- GPU
                                                                  (1, 5), (2, 5), (3, 5), (4, 5);	-- Bateria
-											
+
 INSERT INTO MedidaModeloComponente (fkModeloComponente, fkMedida) VALUES
 	(1,1), (1,2), (2,1), (2,2), (3,1), (3,2), (4,1), (4,2), 			-- CPU
     (5,1), (6,1), (7,1), (8,1),											-- RAM
@@ -232,10 +231,11 @@ CREATE OR REPLACE VIEW alerta_atual AS
 
 CREATE OR REPLACE VIEW alertas_concatenados AS 
 	SELECT fkCarro, 
+    CONCAT(DAY(dateDado),"/", MONTH(dateDado)) as dia, 
     GROUP_CONCAT(cpuAlerta) AS cpuConcat, 
     GROUP_CONCAT(memoriaAlerta) AS memoriaConcat,
     GROUP_CONCAT(bateriaNivelAlerta) AS bateriaNivelConcat
-    FROM dados_como_alerta GROUP BY fkCarro;
+    FROM dados_como_alerta WHERE dateDado > DATE_SUB(now(), INTERVAL 30 DAY) GROUP BY fkCarro, dia;
 
 SELECT * FROM dados_como_alerta;
 SELECT * FROM alertas_ultimo_mes;
