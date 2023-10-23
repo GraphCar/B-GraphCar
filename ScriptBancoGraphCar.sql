@@ -47,7 +47,8 @@ CREATE TABLE Medida(
     nome VARCHAR(20),
     unidade VARCHAR(20),
     limiteAlerta DECIMAL(5,2),
-    limiteCritico DECIMAL(5,2)
+    limiteCritico DECIMAL(5,2),
+    meta DECIMAL(4,1)
 );
 
 CREATE TABLE Servidor(
@@ -154,10 +155,10 @@ INSERT INTO Componentes (idComponentes, nomeComponente) VALUES (NULL, "Disco");
 INSERT INTO Componentes (idComponentes, nomeComponente) VALUES (NULL, "GPU");
 INSERT INTO Componentes (idComponentes, nomeComponente) VALUES (NULL, "Bateria");
 
-INSERT INTO Medida (nome, unidade, limiteAlerta, limiteCritico) VALUES 
-	("temperatura", "°C", 70, 90),
-    ("uso", "%", 70, 90),
-    ("uso", "%", 20, 5);
+INSERT INTO Medida (nome, unidade, limiteAlerta, limiteCritico, meta) VALUES 
+	("temperatura", "°C", 70, 90, 5),
+    ("uso", "%", 70, 90, 10),
+    ("uso", "%", 20, 5, 5);
 
 INSERT INTO modelocomponente(fkModeloCarro, fkComponente) VALUES (1, 1), (2, 1), (3, 1), (4, 1),	-- CPU
                                                                  (1, 2), (2, 2), (3, 2), (4, 2),	-- RAM
@@ -227,7 +228,7 @@ CREATE OR REPLACE VIEW alertas_cpu AS
 CREATE OR REPLACE VIEW alerta_atual AS
 	SELECT d1.* FROM Dados d1 JOIN ( SELECT fkCarro, MAX(dateDado) AS ultimaHora 
 	FROM Dados GROUP BY fkCarro) d2 ON
-    d2.fkCarro = d1.fkCarro AND d2.ultimaHora = d1.dateDado;
+    d2.fkCarro = d1.fkCarro AND d2.ultimaHora = d1.dateDado WHERE d1.dateDado > DATE_SUB(now(), INTERVAL 5 DAY_MINUTE);
 
 CREATE OR REPLACE VIEW alertas_concatenados AS 
 	SELECT fkCarro, 
@@ -236,6 +237,12 @@ CREATE OR REPLACE VIEW alertas_concatenados AS
     GROUP_CONCAT(memoriaAlerta) AS memoriaConcat,
     GROUP_CONCAT(bateriaNivelAlerta) AS bateriaNivelConcat
     FROM dados_como_alerta WHERE dateDado > DATE_SUB(now(), INTERVAL 30 DAY) GROUP BY fkCarro, dia;
+
+CREATE OR REPLACE VIEW metas_dashboard AS
+	SELECT (SELECT COUNT(idCarro) FROM Carro) AS count_carro, 
+	(SELECT meta FROM Medida WHERE idMedida = 2) AS meta_cpu, 
+	(SELECT meta FROM Medida WHERE idMedida = 2) AS meta_gpu, 
+	(SELECT meta FROM Medida WHERE idMedida = 3) AS meta_bat;
 
 SELECT * FROM dados_como_alerta;
 SELECT * FROM alertas_ultimo_mes;
