@@ -131,16 +131,16 @@ CREATE PROCEDURE CADASTRAR_MOTORISTA(IN
     MC_MODELO INT
     
     ) BEGIN 
-	INSERT INTO usuario (nome, email, senha, CPF, foto, nivelAcesso)
+	INSERT INTO usuario (nome, email, senha, cpf, foto, nivelAcesso)
 	VALUES ( us_nome, us_email, us_senha, us_CPF, us_foto, us_nivelacesso);
-	INSERT INTO Carro (Placa , fkUsuario, fkModelo)
+	INSERT INTO Carro (placa , fkUsuario, fkModelo)
 	VALUES ( c_placa,
     (SELECT idUsuario FROM usuario WHERE email = us_email),
     mc_modelo);
 	END// 
 DELIMITER ;
 
-INSERT INTO modelocarro (idModelo, modelo) VALUES (NULL, 'Model S'),
+INSERT INTO ModeloCarro (idModelo, modelo) VALUES (NULL, 'Model S'),
                                                   (NULL, 'Model 3'),
                                                   (NULL, 'Model X'),
                                                   (NULL, 'Model Y');
@@ -160,7 +160,7 @@ INSERT INTO Medida (nome, unidade, limiteAlerta, limiteCritico, meta) VALUES
     ("uso", "%", 70, 90, 10),
     ("uso", "%", 20, 5, 5);
 
-INSERT INTO modelocomponente(fkModeloCarro, fkComponente) VALUES (1, 1), (2, 1), (3, 1), (4, 1),	-- CPU
+INSERT INTO ModeloComponente(fkModeloCarro, fkComponente) VALUES (1, 1), (2, 1), (3, 1), (4, 1),	-- CPU
                                                                  (1, 2), (2, 2), (3, 2), (4, 2),	-- RAM
                                                                  (1, 3), (2, 3), (3, 3), (4, 3),	-- Disco
                                                                  (1, 4), (2, 4), (3, 4), (4, 4),	-- GPU
@@ -249,23 +249,23 @@ SELECT * FROM alertas_ultimo_mes;
 SELECT * FROM alertas_cpu;
 
 SELECT idModelo,
-            u.* FROM usuario u
-            LEFT JOIN carro ON carro.fkUsuario = u.idUsuario
-            LEFT JOIN modeloCarro ON carro.fkModelo = modeloCarro.idModelo
+            u.* FROM Usuario u
+            LEFT JOIN Carro ON Carro.fkUsuario = u.idUsuario
+            LEFT JOIN ModeloCarro ON Carro.fkModelo = ModeloCarro.idModelo
             WHERE u.email = 'h@gmail.com';
 
 SELECT  idModelo,
             idUsuario, 
             nome,
             foto
-            FROM usuario u 
-            JOIN Carro ON carro.fkUsuario = u.idUsuario
-            JOIN ModeloCarro ON carro.fkModelo = modeloCarro.idModelo
+            FROM Usuario u 
+            JOIN Carro ON Carro.fkUsuario = u.idUsuario
+            JOIN ModeloCarro ON Carro.fkModelo = ModeloCarro.idModelo
             WHERE idUsuario = 5;
 
-SELECT * FROM carro 
-        JOIN modelocarro 
-        JOIN usuario ON fkModelo = idModelo and idUsuario = fkUsuario;
+SELECT * FROM Carro 
+        JOIN Modelocarro 
+        JOIN Usuario ON fkModelo = idModelo and idUsuario = fkUsuario;
 
 
 SET @lista_componentes = (SELECT GROUP_CONCAT( (
