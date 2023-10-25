@@ -168,10 +168,10 @@ INSERT INTO ModeloComponente(fkModeloCarro, fkComponente) VALUES (1, 1), (2, 1),
 
 INSERT INTO MedidaModeloComponente (fkModeloComponente, fkMedida) VALUES
 	(1,1), (1,2), (2,1), (2,2), (3,1), (3,2), (4,1), (4,2), 			-- CPU
-    (5,1), (6,1), (7,1), (8,1),											-- RAM
-    (9,1), (10,1), (11,1), (12,1), 										-- Disco
+    (5,2), (6,2), (7,2), (8,2),											-- RAM
+    (9,2), (10,2), (11,2), (12,2), 										-- Disco
     (13,1), (13,2), (14,1), (14,2), (15,1), (15,2), (16,1), (16,2), 	-- GPU
-    (17,1), (18,1), (19,1), (20,1); 									-- Bateria
+    (17,3), (18,3), (19,3), (20,3); 									-- Bateria
 
 CREATE OR REPLACE VIEW alertas_gerais AS
 SELECT SUM(CASE WHEN cpuUso > 70 THEN 1 ELSE 0 END) as cpuAlerta,
@@ -215,7 +215,7 @@ SELECT idDados,
     CASE WHEN gpuUso > 90 THEN 2 ELSE (CASE WHEN gpuUso > 70 THEN 1 ELSE 0 END) END AS gpuAlerta,
     CASE WHEN gpuTemperatura > 90 THEN 2 ELSE (CASE WHEN gpuTemperatura > 70 THEN 1 ELSE 0 END) END AS gpuTempALerta,
     CASE WHEN memoria > 90 THEN 2 ELSE (CASE WHEN memoria > 70 THEN 1 ELSE 0 END) END AS memoriaAlerta,
-	CASE WHEN bateriaNivel < 20 THEN 2 ELSE (CASE WHEN bateriaNivel < 5 THEN 1 ELSE 0 END) END AS bateriaNivelAlerta,
+	CASE WHEN bateriaNivel < 5 THEN 2 ELSE (CASE WHEN bateriaNivel < 20 THEN 1 ELSE 0 END) END AS bateriaNivelAlerta,
 	CASE WHEN bateriaTaxa > 90 THEN 2 ELSE (CASE WHEN bateriaTaxa > 70 THEN 1 ELSE 0 END) END AS bateriaTaxaAlerta,
     dateDado,
     fkCarro FROM Dados;
