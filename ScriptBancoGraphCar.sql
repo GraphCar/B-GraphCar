@@ -148,6 +148,8 @@ INSERT INTO ModeloCarro (idModelo, modelo) VALUES (NULL, 'Model S'),
 
 CALL CADASTRAR_MOTORISTA ('ADM', 'admin@graphcar.com', '$2b$10$M/CbWCDYZcYYDnTUs1nfPOu/U665hzfQDSBucm56MxAy4ldau2YAi', 
 '55555555555', 'user.png', 3, 'AAA 9999', 1);
+CALL CADASTRAR_MOTORISTA ('Carla Teresa', 'carla.teresa@graphcar.com', '$2b$10$M/CbWCDYZcYYDnTUs1nfPOu/U665hzfQDSBucm56MxAy4ldau2YAi', 
+'46781235945', 'user.png', 3, 'BCD 6458', 2);
 
 INSERT INTO Componentes (idComponentes, nomeComponente) VALUES (NULL, "CPU");
 INSERT INTO Componentes (idComponentes, nomeComponente) VALUES (NULL, "RAM");
@@ -228,7 +230,7 @@ CREATE OR REPLACE VIEW alertas_cpu AS
 CREATE OR REPLACE VIEW alerta_atual AS
 	SELECT d1.* FROM Dados d1 JOIN ( SELECT fkCarro, MAX(dateDado) AS ultimaHora 
 	FROM Dados GROUP BY fkCarro) d2 ON
-    d2.fkCarro = d1.fkCarro AND d2.ultimaHora = d1.dateDado WHERE d1.dateDado > DATE_SUB(now(), INTERVAL 5 DAY_MINUTE);
+    d2.fkCarro = d1.fkCarro AND d2.ultimaHora = d1.dateDado WHERE d1.dateDado > DATE_SUB(now(), INTERVAL 15 DAY_MINUTE);
 
 CREATE OR REPLACE VIEW alertas_concatenados AS 
 	SELECT fkCarro, 
