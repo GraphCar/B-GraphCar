@@ -110,7 +110,6 @@ CREATE TABLE Dados(
     CONSTRAINT fkCarro FOREIGN KEY (fkCarro) REFERENCES Carro(idCarro)
 );
 
-
 -- Fim das tabelas!
 
 /* SELECT idDados, 
@@ -236,6 +235,7 @@ CREATE OR REPLACE VIEW alertas_concatenados AS
 	SELECT fkCarro, 
     CONCAT(DAY(dateDado),"/", MONTH(dateDado)) as dia, 
     GROUP_CONCAT(cpuAlerta) AS cpuConcat, 
+    GROUP_CONCAT(gpuAlerta) AS gpuConcat,
     GROUP_CONCAT(memoriaAlerta) AS memoriaConcat,
     GROUP_CONCAT(bateriaNivelAlerta) AS bateriaNivelConcat
     FROM dados_como_alerta WHERE dateDado > DATE_SUB(now(), INTERVAL 30 DAY) GROUP BY fkCarro, dia;
