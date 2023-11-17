@@ -105,6 +105,7 @@ CREATE TABLE Dados(
     memoria DECIMAL(5,2),
     bateriaNivel DECIMAL(5,2),
     bateriaTaxa DECIMAL(5,2),
+    bateriaTempoRestante INT,
     dateDado DATETIME,
     fkCarro INT,
     CONSTRAINT fkCarro FOREIGN KEY (fkCarro) REFERENCES Carro(idCarro)
