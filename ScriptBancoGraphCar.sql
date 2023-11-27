@@ -57,7 +57,8 @@ CREATE TABLE Servidor(
     hostname VARCHAR(45),
     mac CHAR(12),
     finalidadeServidor VARCHAR(45),
-    sistemaOperacional VARCHAR(45)
+    sistemaOperacional VARCHAR(45),
+    dataCriacao DATETIME
 );
 
 CREATE TABLE DadosServidor(
@@ -261,7 +262,20 @@ CREATE OR REPLACE VIEW metas_dashboard AS
 	(SELECT meta FROM Medida WHERE idMedida = 2) AS meta_cpu, 
 	(SELECT meta FROM Medida WHERE idMedida = 2) AS meta_gpu, 
 	(SELECT meta FROM Medida WHERE idMedida = 3) AS meta_bat;
-
+    
+CREATE OR REPLACE VIEW tempo_chamados AS
+	SELECT idChamado, fkServidor, fkComponente,
+		CASE WHEN encerrado = 1
+			THEN TIMEDIFF(ultimaMensagemSlack, dataAbertura)
+            ELSE TIMEDIFF(now(), dataAbertura) END AS tempo
+		FROM Chamado;
+        
+CREATE OR REPLACE VIEW tempo_chamados_porcent AS
+	SELECT s.idServidor AS idServidor, tc.fkComponente AS idComponente, 
+		100 * SUM(tc.tempo) / TIMEDIFF(now(), s.dataCriacao) AS tempoPorcent
+    FROM tempo_chamados tc INNER JOIN Servidor s 
+    ON s.idServidor = tc.fkServidor GROUP BY idServidor, idComponente;
+    
 SELECT * FROM dados_como_alerta;
 SELECT * FROM alertas_ultimo_mes;
 SELECT * FROM alertas_cpu;
