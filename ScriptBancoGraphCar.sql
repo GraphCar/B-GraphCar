@@ -271,10 +271,19 @@ CREATE OR REPLACE VIEW tempo_chamados AS
 		FROM Chamado;
         
 CREATE OR REPLACE VIEW tempo_chamados_porcent AS
-	SELECT s.idServidor AS idServidor, tc.fkComponente AS idComponente, 
-		100 * SUM(tc.tempo) / TIMEDIFF(now(), s.dataCriacao) AS tempoPorcent
+	SELECT s.idServidor AS idServidor, tc.fkComponente AS idComponente, COUNT(idChamado) qtdeChamados,
+		ROUND(100 * SUM(tc.tempo) / TIMEDIFF(now(), s.dataCriacao),2) AS tempoPorcent
     FROM tempo_chamados tc INNER JOIN Servidor s 
     ON s.idServidor = tc.fkServidor GROUP BY idServidor, idComponente;
+    select * from tempo_chamados_porcent;
+SELECT fkServidor, DATE_FORMAT(dateDado, '%m/%d %h:00') AS dataFormatada,
+			MIN(dateDado) AS minDateDado,
+            ROUND(AVG(cpuUso), 2) AS cpuUso,
+            ROUND(AVG(cpuTemperatura), 2) AS cpuTemperatura,
+            ROUND(AVG(memoria), 2) AS memoria,
+            ROUND(AVG(disco), 2) AS disco
+            FROM DadosServidor 
+            WHERE dateDado > DATE_SUB(now(), INTERVAL 1 DAY) GROUP BY fkServidor, dataFormatada ORDER BY minDateDado DESC;
     
 SELECT * FROM dados_como_alerta;
 SELECT * FROM alertas_ultimo_mes;
