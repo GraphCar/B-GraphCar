@@ -55,6 +55,7 @@ CREATE TABLE Servidor(
 	idServidor INT PRIMARY KEY AUTO_INCREMENT,
     modeloServidor VARCHAR(45) NOT NULL,
     hostname VARCHAR(45),
+    mac CHAR(12),
     finalidadeServidor VARCHAR(45),
     sistemaOperacional VARCHAR(45)
 );
@@ -161,7 +162,7 @@ INSERT INTO ModeloCarro (idModelo, modelo) VALUES (NULL, 'Model S'),
 
 
 CALL CADASTRAR_MOTORISTA ('ADM', 'admin@graphcar.com', '123456789', 
-'55555555555', 'user.png', 3, 'AAA 9999', 1);
+'55555555555', 'user.png', 4, 'AAA 9999', 1);
 CALL CADASTRAR_MOTORISTA ('Carlos Pereira', 'carlos.pereira@graphcar.com', '$2b$10$M/CbWCDYZcYYDnTUs1nfPOu/U665hzfQDSBucm56MxAy4ldau2YAi', 
 '46781235945', 'user.png', 3, 'BCD 6458', 2);
 
