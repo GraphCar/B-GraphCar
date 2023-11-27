@@ -111,6 +111,20 @@ CREATE TABLE Dados(
     CONSTRAINT fkCarro FOREIGN KEY (fkCarro) REFERENCES Carro(idCarro)
 );
 
+CREATE TABLE Chamado(
+    idChamado INT PRIMARY KEY AUTO_INCREMENT,
+    fkServidor INT,
+    fkComponente INT,
+    chaveJira VARCHAR(15),
+    status VARCHAR(30),
+    encerrado TINYINT,
+    critico TINYINT,
+    dataAbertura DATETIME,
+    ultimaMensagemSlack DATETIME,
+    FOREIGN KEY (fkServidor) REFERENCES Servidor(idServidor),
+    FOREIGN KEY (fkComponente) REFERENCES Componentes(idComponentes)
+);
+
 -- Fim das tabelas!
 
 /* SELECT idDados, 
